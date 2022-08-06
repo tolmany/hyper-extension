@@ -1,0 +1,66 @@
+ol.dotted-list,
+ol.is-style-dotted-list,
+ul.dotted-list,
+ul.is-style-dotted-list {
+  list-style: none;
+  counter-reset: dotted-counter;
+  position: relative;
+  margin: 2.2rem 0 2rem;
+}
+
+ol.dotted-list li,
+ol.is-style-dotted-list li,
+ul.dotted-list li,
+ul.is-style-dotted-list li {
+  counter-increment: dotted-counter;
+  position: relative;
+  padding-left: 56px;
+  padding-bottom: 30px;
+}
+
+ol.dotted-list li:before,
+ol.is-style-dotted-list li:before,
+ul.dotted-list li:before,
+ul.is-style-dotted-list li:before {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  left: 0;
+  z-index: 5;
+  top: -0.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #0dcaf0;
+  content: counter(dotted-counter);
+  color: #fff;
+  font-weight: 700;
+}
+
+ol.dotted-list li:after,
+ol.is-style-dotted-list li:after,
+ul.dotted-list li:after,
+ul.is-style-dotted-list li:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  left: 20px;
+  border-left: 2px dashed #80869e;
+}
+
+ol.dotted-list li:last-child:after,
+ol.is-style-dotted-list li:last-child:after,
+ul.dotted-list li:last-child:after,
+ul.is-style-dotted-list li:last-child:after {
+  content: "";
+  border-left: none;
+}
