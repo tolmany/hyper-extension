@@ -1,11 +1,22 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Evaluate1 from "../../Assets/img/Evaluate1.png";
 import Evaluate2 from "../../Assets/img/Evaluate2.png";
 
 const ExtensionDetails = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+		const token = localStorage.getItem('userInfo')
+			? JSON.parse(localStorage.getItem('userInfo'))
+			: null
+		if (token) {
+			navigate('/nothing')
+		}
+	}, [navigate])
+
   return (
-    <div className="w-full bg-[#F0F3F4]">
+    <div className="w-full bg-[#F0F3F4]"> 
       <div className="w-full flex justify-center items-center flex-col p-4">
         <div className="text-3xl  text-gray-800 my-6">Evaluate new ideas as you browse</div>
         <div className="flex w-full">

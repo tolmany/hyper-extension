@@ -2,6 +2,8 @@ import EmptyState from "../../Assets/img/empty-state-instruction.gif";
 import "./style.css";
 
 const Help = () => {
+
+
   return (
     <div className="w-full bg-[#F5F7F9] h-[540px] flex">
       <div className="w-1/2 h-full flex items-center">

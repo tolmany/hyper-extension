@@ -4,40 +4,49 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { isEmpty } from "../../utilities";
 
-const HYPER_API_BASE_URL =
-  process.env.HYPER_API_BASE_URL || "https://hyper-api-proto.herokuapp.com";
-
 const Login = () => {
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
-  const [check, setCheck] = useState(false);
-  const [disable, setDisable] = useState(true);
+  const [isCheck, setCheck] = useState(false);
+  const [isDiasbled, setDisabled] = useState(true);
   const [error, setError] = useState("");
+  const [isLoading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const HYPER_API_BASE_URL =
+    process.env.HYPER_API_BASE_URL || "https://hyper-api-proto.herokuapp.com";
 
   useEffect(() => {
-    if (isEmpty(email) || isEmpty(password)) {
-      setDisable(true);
-    } else {
-      setDisable(false);
-    }
+    if (isEmpty(email) || isEmpty(password)) setDisabled(true);
+    else setDisabled(false);
   }, [email, password]);
 
+  useEffect(() => {
+		const token = localStorage.getItem('userInfo')
+			? JSON.parse(localStorage.getItem('userInfo'))
+			: null
+		if (token) {
+			navigate('/help')
+		}
+	}, [navigate])
+
   const handleSubmit = async () => {
+    setLoading(true);
     try {
+
       const { data } = await axios.post(`${HYPER_API_BASE_URL}/api/auth/signin`, {
         email,
         password,
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
-      navigate("/search");
+      navigate("/help");
     } catch (error) {
       const message =
         error.response && error.response.data.message ? error.response.data.message : error.message;
       setError(message);
     }
+    setLoading(false);
+
   };
 
   return (
@@ -100,8 +109,8 @@ const Login = () => {
           </div>
           <div className="mt-2 flex items-center ">
             <input
-              checked={check}
-              onChange={() => setCheck(!check)}
+              checked={isCheck}
+              onChange={() => setCheck(!isCheck)}
               id="bordered-checkbox-2"
               type="checkbox"
               name="bordered-checkbox"
@@ -114,23 +123,42 @@ const Login = () => {
               Switch to the suggested server if you are in mainland China.{" "}
             </label>
           </div>
+          {
+            !isLoading ? 
           <button
             onClick={() => handleSubmit()}
             className={
-              (disable ? "bg-gray-500" : "bg-primary") + ` w-[420px] h-9 text-white text-sm mt-5`
+              (isDiasbled ? "bg-gray-500" : "bg-primary") + ` w-[420px] h-9 text-white text-sm mt-5`
             }
-            disabled={disable}
+            disabled={isDiasbled}
           >
             Log in
           </button>
+            :
+            <button
+              onClick={() => handleSubmit()}
+              className={
+                `bg-primary w-[420px] h-9 text-white text-sm mt-5 flex items-center justify-center`
+              }
+              disabled={isDiasbled}
+            >
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Loading...
+            </button>
+          }
+          <div className="w-full flex justify-center">
           <a
             href="https://hyper-suite.vercel.app/forgot-password"
             target={"_blank"}
             rel="noreferrer"
-            className="text-sm text-gray-500 w-full flex justify-center cursor-pointer mt-5"
+            className="text-sm text-gray-500 w-fit  cursor-pointer mt-5 "
           >
             Forgot your password?
           </a>
+          </div>
         </div>
       </div>
       <div className="h-1/5 flex justify-center items-center border-t border-t-gray-300 w-full">
